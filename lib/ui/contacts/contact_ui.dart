@@ -4,6 +4,13 @@ import 'package:patientengagement/block/dashboard_block.dart';
 import 'package:patientengagement/ui/common/common_class.dart';
 import 'package:patientengagement/utils/colors.dart';
 
+class EmergencyNumbers{
+  String name;
+  String number;
+  EmergencyNumbers(this.name,this.number);
+}
+
+
 class ContactUi extends StatefulWidget {
   @override
   _DashboardState createState() => _DashboardState();
@@ -19,6 +26,18 @@ class _DashboardState extends State<ContactUi> with WidgetsBindingObserver {
 //      DashboardProvider.of(context).changePath('/dashboard');
 //    });
   }
+
+
+  List<String> doctor = [
+    "Dr. Shubha"," Dr. Srinivas", "Dr. Akrithi"
+  ];
+  
+  List<EmergencyNumbers> emergency = [
+    EmergencyNumbers("National Emergency Number ","112"),
+    EmergencyNumbers("Ambulance","102"),
+    EmergencyNumbers("Apollo Indraprastha hospita","011-26925858"),
+
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +75,11 @@ class _DashboardState extends State<ContactUi> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        ...List.generate(3, (index) {
+                        ...List.generate(doctor.length, (index) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              ShowDoctor(DoctorModel("Dr. Prasad")),
+                              ShowDoctor(DoctorModel(doctor[index])),
                               Divider(),
                             ],
                           );
@@ -97,12 +116,12 @@ class _DashboardState extends State<ContactUi> with WidgetsBindingObserver {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        ...List.generate(3, (index) {
+                        ...List.generate(emergency.length, (index) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               ShowEmergencyContact(EmergencyContactModel(
-                                  "National Emergency Number", "112")),
+                                  emergency[index].name, emergency[index].number)),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 8, right: 8),
@@ -117,7 +136,7 @@ class _DashboardState extends State<ContactUi> with WidgetsBindingObserver {
                 ),
               ),
               ShowHeading(
-                title: "Call s Cab",
+                title: "Call Cab",
                 subTitle: "Add Contacts",
               ),
               Padding(
@@ -196,7 +215,7 @@ class ShowDoctor extends StatelessWidget {
           children: <Widget>[
             Expanded(
                 child: new Text(
-              "Dr. Prasad",
+              "${data.name}",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 14,
@@ -260,19 +279,19 @@ class ShowEmergencyContact extends StatelessWidget {
                 fontWeight: FontWeight.normal),
           ),
           trailing: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColor.violet, width: 1),
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-              ),
-              height: 30,
-              width: 30,
+//              decoration: BoxDecoration(
+//                border: Border.all(color: AppColor.violet, width: 1),
+//                borderRadius: BorderRadius.all(Radius.circular(30)),
+//              ),
+              height: 35,
+              width: 35,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Center(
                     child: SvgPicture.asset(
                   "assets/svg/call.svg",
                   color: AppColor.violet,
-                  height: 20,
+                  height: 30,
                 )),
               )),
         ),

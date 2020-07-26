@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/parser.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_svg/avd.dart';
+import 'package:patientengagement/block/article_block.dart';
 import 'package:patientengagement/block/dashboard_block.dart';
 import 'package:patientengagement/routes/routes.dart';
 import 'package:patientengagement/utils/export_utils.dart';
@@ -45,29 +46,34 @@ void main() {
 class MyApp extends StatelessWidget {
 
   DashboardBlock dashboardBlock = DashboardBlock();
+  ArticlesBlock articlesBlock = ArticlesBlock();
+
   static final navKey = new GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return DashboardProvider(
       dataBlock: dashboardBlock,
-      child: MaterialApp(
-        key: navKey,
-        title: 'Patient Engagement',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme:textTheme
-        ),
+      child: ArticlesProvider(
+        dataBlock: articlesBlock,
+        child: MaterialApp(
+          key: navKey,
+          title: 'Patient Engagement',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            textTheme:textTheme
+          ),
 //        home: MyHomePage(title: 'Flutter Demo Home Page'),
-        initialRoute: '/dashboard',
-        onGenerateRoute: (RouteSettings settings) {
+          initialRoute: '/login',
+          onGenerateRoute: (RouteSettings settings) {
 //          DashboardProvider.of(context).changePath(settings.name);
-          return pageRouteGenerator(settings);
-        },
+            return pageRouteGenerator(settings);
+          },
 //        builder: (BuildContext context , Widget child){
 //          return PatientEngagementBuilder(child);
 //        },
+        ),
       ),
     );
   }

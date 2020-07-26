@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:patientengagement/block/article_block.dart';
 import 'package:patientengagement/models/articles_model.dart';
 import 'package:patientengagement/ui/common/common_class.dart';
+import 'package:patientengagement/ui/common/loaders.dart';
 import 'package:patientengagement/utils/colors.dart';
 import 'package:patientengagement/ui/common/common_export.dart';
 
@@ -10,7 +11,24 @@ class LearnUi extends StatefulWidget {
   _LearnUiState createState() => _LearnUiState();
 }
 
-class _LearnUiState extends State<LearnUi> {
+class _LearnUiState extends State<LearnUi> with WidgetsBindingObserver{
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      callLoader(context: context);
+      await ArticlesProvider.of(context).getInitialArticleData();
+      Navigator.pop(context);
+    });
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,8 +36,11 @@ class _LearnUiState extends State<LearnUi> {
       child: Container(
         child: RefreshIndicator(
           onRefresh: () async {
-            await Future.delayed(Duration(seconds: 3));
-          },
+              callLoader(context: context);
+              ArticlesProvider.of(context).refresh = true;
+              await ArticlesProvider.of(context).getInitialArticleData();
+              Navigator.pop(context);
+            },
           backgroundColor: AppColor.white,
           child: SingleChildScrollView(
             child: Column(
@@ -37,9 +58,9 @@ class _LearnUiState extends State<LearnUi> {
                         ShowHeading(
                           title: "Articles",
                           subTitle: "ALL ARTICLES",
-                          callBack: () {
-                            Navigator.of(context).pushNamed('/allarticles');
-                          },
+//                          callBack: () {
+//                            Navigator.of(context).pushNamed('/allarticles');
+//                          },
                         ),
                         Container(
                           height: 70,
@@ -47,7 +68,7 @@ class _LearnUiState extends State<LearnUi> {
                         ),
                       ],
                     );
-                  } else if (!snap.error) {
+                  } else if (snap.hasError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +81,7 @@ class _LearnUiState extends State<LearnUi> {
                           width: MediaQuery.of(context).size.width,
                           child: Center(
                             child: new Text(
-                              "No article fount",
+                              "No article found",
                               style: Theme.of(context)
                                   .textTheme
                                   .headline1
@@ -96,7 +117,7 @@ class _LearnUiState extends State<LearnUi> {
                               width: MediaQuery.of(context).size.width,
                               child: Center(
                                 child: new Text(
-                                  "No article fount",
+                                  "No article found",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline1
@@ -111,20 +132,96 @@ class _LearnUiState extends State<LearnUi> {
                     ],
                   );
                 }),
-                StreamBuilder<List<VideoModel>>(builder: (context, snap) {}),
-                ShowHeading(
-                  title: "Videos",
-                  subTitle: "ALL VIDEOS",
-                  callBack: () {
-                    Navigator.of(context).pushNamed('/allvideos');
-                  },
-                ),
-                ShowVideos(),
+
+
+                /// video part
+
+                StreamBuilder<List<VideoModel>>(
+                    stream: ArticlesProvider.of(context).videoArticleStream,
+                    builder: (context, snap) {
+                      if (!snap.hasData) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ShowHeading(
+                              title: "Videos",
+                            ),
+                            Container(
+                              height: 70,
+                              width: MediaQuery.of(context).size.width,
+                            ),
+                          ],
+                        );
+                      } else if (snap.hasError) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ShowHeading(
+                              title: "Videos",
+
+                            ),
+                            new Container(
+                              height: 70,
+                              width: MediaQuery.of(context).size.width,
+                              child: Center(
+                                child: new Text(
+                                  "No video found",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      .copyWith(
+                                      color:
+                                      AppColor.blackCommon.withOpacity(0.3),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          ShowHeading(
+                            title: "Videos",
+                            subTitle: "ALL VIDEOS",
+                            callBack: () {
+                              Navigator.of(context).pushNamed('/allvideos');
+                            },
+                          ),
+                          snap.data.length > 0
+                              ? ShowVideos(snap.data[0])
+                              : new Container(
+                            height: 70,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: new Text(
+                                "No video found",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    .copyWith(
+                                    color: AppColor.blackCommon
+                                        .withOpacity(0.3),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+
 
                 /// Health tips stream
 
                 StreamBuilder<List<ArticlesModel>>(
-                    stream: ArticlesProvider.of(context).articlesStream,
+                    stream: ArticlesProvider.of(context).exerciseTipStream,
                     builder: (context, snap) {
                       if (!snap.hasData) {
                         return Column(
@@ -141,7 +238,7 @@ class _LearnUiState extends State<LearnUi> {
                             ),
                           ],
                         );
-                      } else if (!snap.error) {
+                      } else if (snap.hasError) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +251,7 @@ class _LearnUiState extends State<LearnUi> {
                               width: MediaQuery.of(context).size.width,
                               child: Center(
                                 child: new Text(
-                                  "No article fount",
+                                  "No article found",
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline1
@@ -179,7 +276,7 @@ class _LearnUiState extends State<LearnUi> {
                             subTitle: "ALL TIPS",
                             callBack: snap.data.length > 1
                                 ? () {
-                              Navigator.of(context).pushNamed('/allarticles');
+                              Navigator.of(context).pushNamed('/allhealthtip');
                             }
                                 : null,
                           ),
@@ -190,7 +287,7 @@ class _LearnUiState extends State<LearnUi> {
                             width: MediaQuery.of(context).size.width,
                             child: Center(
                               child: new Text(
-                                "No article fount",
+                                "No article found",
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline1
@@ -205,26 +302,98 @@ class _LearnUiState extends State<LearnUi> {
                         ],
                       );
                     }),
-                ShowHeading(
-                  title: "Health Tips",
-                  subTitle: "ALL TIPS",
-                  callBack: () {
-                    Navigator.of(context).pushNamed('/allhealthtip');
-                  },
-                ),
-                ShowHealthTip(),
-                StreamBuilder<List<ArticlesModel>>(builder: (context, snap) {}),
-                ShowHeading(
-                  title: "Yoga Guru",
-                  subTitle: "ALL YOGA TIPS",
-                  callBack: () {
-                    Navigator.of(context).pushNamed('/allyogatip');
-                  },
-                ),
-                ShowYogaArticles(),
+
+
+                /// Yoga guru
+
+                StreamBuilder<List<ArticlesModel>>(
+                    stream: ArticlesProvider.of(context).yogaTipStream,
+                    builder: (context, snap) {
+                      if (!snap.hasData) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ShowHeading(
+                              title: "Yoga Guru",
+
+                            ),
+                            Container(
+                              height: 70,
+                              width: MediaQuery.of(context).size.width,
+                            ),
+                          ],
+                        );
+                      } else if (snap.hasError) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            ShowHeading(
+                              title: "Yoga Guru",
+                            ),
+                            new Container(
+                              height: 70,
+                              width: MediaQuery.of(context).size.width,
+                              child: Center(
+                                child: new Text(
+                                  "No article found",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      .copyWith(
+                                      color:
+                                      AppColor.blackCommon.withOpacity(0.3),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          ShowHeading(
+                            title: "Yoga Guru",
+                            subTitle: "ALL YOGA TIPS",
+                            callBack: snap.data.length > 1
+                                ? () {
+                              Navigator.of(context).pushNamed('/allyogatip');
+                            }
+                                : null,
+                          ),
+                          snap.data.length > 0
+                              ? ShowArticles(snap.data[0])
+                              : new Container(
+                            height: 70,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: new Text(
+                                "No article found",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline1
+                                    .copyWith(
+                                    color: AppColor.blackCommon
+                                        .withOpacity(0.3),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+
                 SizedBox(
                   height: 100,
                 ),
+
+
               ],
             ),
           ),

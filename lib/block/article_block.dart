@@ -19,35 +19,48 @@ class ArticlesBlock {
   final _videoArticle = BehaviorSubject<List<VideoModel>>();
   Stream<List<VideoModel>> get videoArticleStream => _videoArticle.stream;
 
-  getInitialArticleData() async {
-    var responses = await Future.wait(
-        [getArticle(), getYoga(), getExercise(), getHealthTip(), getVideos()]);
 
-    for (int i = 0; i < responses.length; i++) {
-      switch (i) {
-        case 0:
-          setArticle(responses[i]);
-          break;
-        case 1:
-          setYogaTip(responses[i]);
-          break;
-        case 2:
-          setExerciseTip(responses[i]);
-          break;
-        case 3:
-          setHealthTip(responses[i]);
-          break;
-        case 4:
-          setVideo(responses[i]);
-          break;
+  bool refresh = true;
+
+  getInitialArticleData() async {
+
+    if(refresh){
+      var responses = await Future.wait(
+          [getArticle(), getYoga(), getExercise(), getHealthTip(), getVideos()]);
+
+      print(responses);
+      for (int i = 0; i < responses.length; i++) {
+        switch (i) {
+          case 0:
+            print("called Article");
+            setArticle(responses[i]);
+            break;
+          case 1:
+            setYogaTip(responses[i]);
+            break;
+          case 2:
+            setExerciseTip(responses[i]);
+            break;
+          case 3:
+            print("health tip");
+            setHealthTip(responses[i]);
+            break;
+          case 4:
+            setVideo(responses[i]);
+            break;
+        }
       }
+      refresh = false;
     }
 
     return true;
+
   }
 
   void setArticle(dynamic data) {
+
     if (data is ArticlesApiResponse) {
+      print("called Article ${data.articles}");
       this._articles.add(data.articles);
     } else {
       this._articles.addError(data);
@@ -56,6 +69,7 @@ class ArticlesBlock {
 
   void setHealthTip(dynamic data) {
     if (data is ArticlesApiResponse) {
+      print("health tip ${data.articles}");
       this._healthTip.add(data.articles);
     } else {
       this._healthTip.addError(data);

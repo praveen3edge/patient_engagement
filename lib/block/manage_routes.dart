@@ -1,7 +1,13 @@
+import 'package:patientengagement/api/auth.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 
 class RoutesBlock{
+
+
+  final _auth = BehaviorSubject<String>();
+  Stream<String> get authStream => _auth.stream;
+
 
 
   final _path = BehaviorSubject<String>();
@@ -16,6 +22,17 @@ class RoutesBlock{
     _path.add(path);
   }
 
+  Future<dynamic> callApiLogin(String email , String password) async{
+
+    var body = {
+      "username" : email,
+      "password" : password
+    };
+
+    var response = await login(body);
+    return response;
+
+  }
 
 
 }

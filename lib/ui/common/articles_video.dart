@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:patientengagement/models/articles_model.dart';
+import 'package:patientengagement/ui/learn/read/article.dart';
+import 'package:patientengagement/ui/learn/read/video.dart';
 import 'package:patientengagement/utils/export_utils.dart';
 
 class ShowArticles extends StatelessWidget {
@@ -7,11 +9,15 @@ class ShowArticles extends StatelessWidget {
   ShowArticles(this.data);
   @override
   Widget build(BuildContext context) {
+//    data.articleDescription = data.articleDescription+" https:// images. medicinenet.com /images/article/ main_image/healthy-living2.jpg";
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed('/viewarticle');
+//          Navigator.of(context).pushNamed('/viewarticle');
+        Navigator.push(context,MaterialPageRoute(builder: (context){
+          return ReadArticle(data.articleContent,data.articleName);
+        }));
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -38,7 +44,7 @@ class ShowArticles extends StatelessWidget {
                       color: Colors.white,
                       image: DecorationImage(
                           image: NetworkImage(
-                            "https://images.medicinenet.com/images/article/main_image/healthy-living2.jpg",
+                            data.articleImage,
                           ),
                           fit: BoxFit.cover),
                       boxShadow: [
@@ -52,10 +58,10 @@ class ShowArticles extends StatelessWidget {
                 ),
 
                 Expanded(child: ListTile(
-                  title: Text("What is healthy living?",style: Theme.of(context).textTheme.headline4.copyWith(
+                  title: Text(data.articleName,style: Theme.of(context).textTheme.headline4.copyWith(
                       fontSize: 16,color: AppColor.blackCommon
                   ),),
-                  subtitle: Text("Healthy living , To most people means both physical and mental health ...",style: Theme.of(context).textTheme.headline4.copyWith(
+                  subtitle: Text(data.articleDescription.length < 80?data.articleDescription:data.articleDescription.replaceRange(77, data.articleDescription.length, "..."),style: Theme.of(context).textTheme.headline4.copyWith(
                     fontSize: 13,
                   ),),
                 )),
@@ -70,13 +76,20 @@ class ShowArticles extends StatelessWidget {
 }
 
 class ShowVideos extends StatelessWidget {
+  VideoModel data;
+  ShowVideos(this.data);
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed('/playvideo');
+//          Navigator.of(context).pushNamed('/playvideo');
+
+        Navigator.push(context,MaterialPageRoute(builder: (context){
+          return PlayVideoArticle(data);
+        }));
+
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -103,7 +116,7 @@ class ShowVideos extends StatelessWidget {
                       color: Colors.white,
                       image: DecorationImage(
                           image: NetworkImage(
-                            "http://loseweightexperts.com/wp-content/uploads/2018/09/0-657.jpg",
+                            data.videoImage,
                           ),
                           fit: BoxFit.cover),
                       boxShadow: [
@@ -128,10 +141,10 @@ class ShowVideos extends StatelessWidget {
                 ),
 
                 Expanded(child: ListTile(
-                  title: Text("HEALTHY HABITS: 10 daily habits that may change your life",style: Theme.of(context).textTheme.headline4.copyWith(
+                  title: Text(data.videoName+" - "+data.videoAuthor,style: Theme.of(context).textTheme.headline4.copyWith(
                       fontSize: 14,color: AppColor.blackCommon
                   ),),
-                  subtitle: Text("10 daily habits that have helped not only my physical he..",style: Theme.of(context).textTheme.headline4.copyWith(
+                  subtitle: Text(data.videoDescription,style: Theme.of(context).textTheme.headline4.copyWith(
                     fontSize: 12,
                   ),),
                 )),

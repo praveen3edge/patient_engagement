@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:patientengagement/models/articles_model.dart';
+import 'package:patientengagement/ui/export.dart';
 import 'package:patientengagement/utils/export_utils.dart';
 
 class ShowYogaArticles extends StatelessWidget {
+  ArticlesModel data;
+  ShowYogaArticles(this.data);
   @override
   Widget build(BuildContext context) {
     return Padding(

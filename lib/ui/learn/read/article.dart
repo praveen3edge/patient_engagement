@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:patientengagement/ui/common/app_bar.dart';
 import 'package:patientengagement/ui/common/common_class.dart';
+import 'package:patientengagement/ui/common/loaders.dart';
 //import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:patientengagement/utils/colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -8,13 +9,26 @@ import 'dart:async';
 import 'dart:convert';
 
 class ReadArticle extends StatefulWidget {
+  String url;
+  String name;
+  ReadArticle(this.url,this.name);
   @override
   _ReadArticleArticleState createState() => _ReadArticleArticleState();
 }
 
-class _ReadArticleArticleState extends State<ReadArticle> {
+class _ReadArticleArticleState extends State<ReadArticle> with WidgetsBindingObserver{
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      callLoader(context: context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +39,21 @@ class _ReadArticleArticleState extends State<ReadArticle> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TopBar("Article Name"),
+            TopBar(widget.name),
             Expanded(
               child: WebView(
-                initialUrl: 'https://www.medicalnewstoday.com/articles/286745',
+                initialUrl: widget.url,
                 javascriptMode: JavascriptMode.unrestricted,
                 navigationDelegate: (x) {
                   return NavigationDecision.prevent;
+                },
+                onPageStarted: (url){
+//                  callLoader(context: context);
+
+                },
+                onPageFinished: (url){
+
+                  Navigator.pop(context);
                 },
               ),
             )

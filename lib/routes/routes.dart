@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patientengagement/ui/authorization/login.dart';
 import 'package:patientengagement/ui/contacts/contact_ui_tree/add_contacts.dart';
 import 'package:patientengagement/ui/dashboard/main_ui.dart';
 import 'package:patientengagement/ui/dashboard/ui_tree_screens/schedule_screen_ui.dart';
@@ -61,10 +62,14 @@ MaterialPageRoute pageRouteGenerator(RouteSettings settings){
       builder = (BuildContext context)=>ShowAllHealthTip();
       break;
     case '/playvideo':
-      builder = (BuildContext context)=>PlayVideoArticle();
+      builder = (BuildContext context)=>PlayVideoArticle(null);
       break;
     case '/viewarticle':
-      builder = (BuildContext context)=>ReadArticle();
+      builder = (BuildContext context)=>ReadArticle(null,null);
+      break;
+
+    case '/login':
+      builder = (BuildContext context)=>LoginUi();
       break;
 
 

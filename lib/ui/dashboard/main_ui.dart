@@ -82,8 +82,8 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
               ),
 
               ShowHeading(
-                title: "Upcoming Visits",
-                subTitle: "SCHEDULE VISITS",
+                title: "Upcoming Visit",
+                subTitle: "SCHEDULE VISIT",
                 callBack: (){
                   Navigator.of(context).pushNamed('/scheculevisit');
                 },//
@@ -217,23 +217,23 @@ class _AppointmentCardState extends State<AppointmentCard> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
-                child: new Text(DateFormat('EEE , dd LLL yyyy').format(DateTime.now().add(Duration(days: 10))),style: Theme.of(context).textTheme.headline4.copyWith(
+                child: new Text(DateFormat('hh:mm a , dd LLL yyyy ').format(DateTime.now().add(Duration(days: 10))),style: Theme.of(context).textTheme.headline4.copyWith(
                     color: Colors.black,fontSize: 14
                 ),),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: new Text("Time",style: Theme.of(context).textTheme.headline4.copyWith(
-                    color: AppColor.grey,fontSize: 12
-                ),),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: new Text(DateFormat('hh:mm a').format(DateTime.now().add(Duration(days: 10))),style: Theme.of(context).textTheme.headline4.copyWith(
-                    color: Colors.black,fontSize: 14
-                ),),
-              ),
+//              Padding(
+//                padding: const EdgeInsets.only(top: 8.0),
+//                child: new Text("Time",style: Theme.of(context).textTheme.headline4.copyWith(
+//                    color: AppColor.grey,fontSize: 12
+//                ),),
+//              ),
+//              Padding(
+//                padding: const EdgeInsets.only(top: 4.0),
+//                child: new Text(DateFormat('hh:mm a').format(DateTime.now().add(Duration(days: 10))),style: Theme.of(context).textTheme.headline4.copyWith(
+//                    color: Colors.black,fontSize: 14
+//                ),),
+//              ),
 
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),

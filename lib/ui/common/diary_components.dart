@@ -61,17 +61,21 @@ class _ShowMedicationCheckState extends State<ShowMedicationCheck> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              new Checkbox(
-                  checkColor: AppColor.violet,
-                  activeColor: Colors.white,
-                  value: this.widget.medicationModel[index].selected,
-                  onChanged: (val) {
-                    print(this.widget.medicationModel[index].title);
-                    setState(() {
-                      this.widget.medicationModel[index].selected = val;
-                      this.widget.medicationModel[index].time = DateTime.now();
-                    });
-                  }),
+              SizedBox(
+                height: 30,
+                width: 42,
+                child: new Checkbox(
+                    checkColor: AppColor.violet,
+                    activeColor: Colors.white,
+                    value: this.widget.medicationModel[index].selected,
+                    onChanged: (val) {
+                      print(this.widget.medicationModel[index].title);
+                      setState(() {
+                        this.widget.medicationModel[index].selected = val;
+                        this.widget.medicationModel[index].time = DateTime.now();
+                      });
+                    }),
+              ),
               Expanded(
                 child: new Text(this.widget.medicationModel[index].title,style: Theme.of(context).textTheme.bodyText2.copyWith(
                     color: this.widget.medicationModel[index].selected?AppColor.grey:Colors.black,fontSize: 14,fontWeight: FontWeight.bold

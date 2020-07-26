@@ -25,6 +25,7 @@ class ArticlesModel {
   int articleDatePublished;
   String articleAuthor;
   int category;
+  String articleImage;
 
   ArticlesModel(
       {this.articleId,
@@ -33,7 +34,7 @@ class ArticlesModel {
       this.articleDescription,
       this.articleDatePublished,
       this.articleAuthor,
-      this.category});
+      this.category,this.articleImage});
 
   factory ArticlesModel.fromJson(var data) {
     return ArticlesModel(
@@ -43,7 +44,8 @@ class ArticlesModel {
         articleDescription: data["articleDescription"]??"-",
         articleAuthor: data["articleAuthor"]??"-",
         articleDatePublished: data["articleDatePublished"]??0,
-        category: data["category"]??-1
+        category: data["category"]??-1,
+        articleImage:data["articleImage"]??"none.jpg"
     );
   }
 }
@@ -74,6 +76,7 @@ class VideoModel {
   int videoDatePublished;
   String videoAuthor;
   int category;
+  String videoImage;
 
   VideoModel(
       {this.videoId,
@@ -82,7 +85,7 @@ class VideoModel {
         this.videoDescription,
         this.videoDatePublished,
         this.videoAuthor,
-        this.category});
+        this.category,this.videoImage});
 
   factory VideoModel.fromJson(var data) {
     return VideoModel(
@@ -92,7 +95,8 @@ class VideoModel {
         videoDescription: data["videoDescription"]??"-",
         videoAuthor: data["videoAuthor"]??"-",
         videoDatePublished: data["videoDatePublished"]??0,
-        category: data["category"]??-1
+        category: data["category"]??-1,
+        videoImage:data["videoImage"]??"none.jpg"
     );
   }
 }

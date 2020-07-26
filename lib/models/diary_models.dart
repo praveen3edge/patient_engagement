@@ -109,7 +109,7 @@ var x = {
       ]
     },
     {
-      "heading":"AfterNoon",
+      "heading":"Afternoon",
       "medication_list":[
         {
           "taken":true,
